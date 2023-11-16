@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js">
+   </script>
+    <title>View Chart</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+      
+      .chartCard {
+        width: 100vw;
+        height: calc(100vh - 40px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .chartBox {
+        width: 1250px;
+        padding: 10px;
+        border-radius: 7px;
+        background: white;
+      }
+      .chartBox h2{
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+      <h2>http://localhost:8082/collectChartData</h2>
+        <div class="chartCard">
+        <div class="chartBox">
+        <h2>Corona Virus Death Report</h2><br>
+        <canvas id="myChart"></canvas>
+        </div>
+        </div>
+    <script>
+    //Fetch Block
+    const url = 'http://localhost:8082/collectChartData';
+    fetchData();
+    async function fetchData(){
+    	const response = await fetch(url);
+    	const data = await response.json();
+    	console.log(data);
+    	console.log(data.length);
+    	var name =[];
+    	var details = [];
+    	for (i = 0; i < data.length; i++) {
+    		name.push(data[i].country);
+            details.push(data[i].latestTotalDeaths);
+    	}
+    	//console.log(name);
+        //console.log(details);
+        new Chart(document.getElementById("myChart"),{
+        	type: 'bar',
+        	data: {
+        		labels: name,
+        		datasets: [{
+        			label: 'Death Count',
+        			backgroundColor:["#3e95cd","#8e5ea2","#3cba9f","#e8c3b9","#c45850","#CD5C5C","#40E0D0"],
+        			data: details,
+        		    borderWidth: 1
+        		}]
+        	},
+        	options: {
+                legend: { display: false },
+                title: {
+                    display: true
+        			}
+        	}
+        });
+    }
+    </script>
+
+  </body>
+</html>
